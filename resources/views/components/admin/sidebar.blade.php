@@ -99,6 +99,67 @@
                     @endif
                 </a>
             </li>
+
+            <!-- Payment Type item -->
+            <li class="relative group">
+                <a href="{{ route('admin.payment-types.index') }}"
+                    class="is-drawer-close:tooltip is-drawer-close:tooltip-right {{ request()->routeIs('admin.payment-types.*') ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg shadow-purple-500/50' : 'text-gray-300 hover:bg-gray-700/50' }} rounded-xl transition-all duration-300"
+                    data-tip="Tipe Pembayaran">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                    <span class="is-drawer-close:hidden font-medium">Tipe Pembayaran</span>
+
+                    <!-- Active indicator -->
+                    @if(request()->routeIs('admin.payment-types.*'))
+                    <div
+                        class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-r-full is-drawer-close:hidden">
+                    </div>
+                    @endif
+                </a>
+            </li>
+
+            <!-- Location item -->
+            <li class="relative group">
+                <a href="{{ route('admin.locations.index') }}"
+                    class="is-drawer-close:tooltip is-drawer-close:tooltip-right {{ request()->routeIs('admin.locations.*') ? 'bg-gradient-to-r from-orange-600 to-orange-700 text-white shadow-lg shadow-orange-500/50' : 'text-gray-300 hover:bg-gray-700/50' }} rounded-xl transition-all duration-300"
+                    data-tip="Lokasi">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span class="is-drawer-close:hidden font-medium">Manajemen Lokasi</span>
+
+                    <!-- Active indicator -->
+                    @if(request()->routeIs('admin.locations.*'))
+                    <div
+                        class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-r-full is-drawer-close:hidden">
+                    </div>
+                    @endif
+                </a>
+            </li>
+
+            <!-- Ticket Type item -->
+            <li class="relative group">
+                <a href="{{ route('admin.ticket-types.index') }}"
+                    class="is-drawer-close:tooltip is-drawer-close:tooltip-right {{ request()->routeIs('admin.ticket-types.*') ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-500/50' : 'text-gray-300 hover:bg-gray-700/50' }} rounded-xl transition-all duration-300"
+                    data-tip="Tipe Tiket">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
+                    </svg>
+                    <span class="is-drawer-close:hidden font-medium">Tipe Tiket</span>
+
+                    <!-- Active indicator -->
+                    @if(request()->routeIs('admin.ticket-types.*'))
+                    <div
+                        class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-r-full is-drawer-close:hidden">
+                    </div>
+                    @endif
+                </a>
+            </li>
         </ul>
 
         <!-- Logout Section -->

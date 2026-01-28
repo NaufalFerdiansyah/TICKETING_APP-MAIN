@@ -78,7 +78,7 @@
                 <div class="container mx-auto px-6 py-4">
                     <div class="text-center">
                         <p class="text-sm text-gray-600">
-                            © {{ date('Y') }} <span class="font-semibold text-gray-800">Fatlem</span>. All
+                            © {{ date('Y') }} <span class="font-semibold text-gray-800">Naufal</span>. All
                             rights reserved.
                         </p>
                     </div>

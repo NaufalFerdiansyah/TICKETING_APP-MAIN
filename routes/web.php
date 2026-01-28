@@ -6,6 +6,9 @@ use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\User\EventController as UserEventController;
 use App\Http\Controllers\Admin\HistoriesController;
 use App\Http\Controllers\Admin\TiketController;
+use App\Http\Controllers\Admin\PaymentTypeController;
+use App\Http\Controllers\Admin\LocationController;
+use App\Http\Controllers\Admin\TicketTypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +41,15 @@ Route::middleware('auth')->group(function () {
 
         // Tiket Management 
         Route::resource('tickets', TiketController::class);
+        
+        // Payment Type Management
+        Route::resource('payment-types', PaymentTypeController::class);
+        
+        // Location Management
+        Route::resource('locations', LocationController::class);
+        
+        // Ticket Type Management
+        Route::resource('ticket-types', TicketTypeController::class);
         
         // Histories
         Route::get('/histories', [HistoriesController::class, 'index'])->name('histories.index');
