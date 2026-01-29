@@ -14,6 +14,7 @@ class Location extends Model
         'alamat',
         'kota',
         'kapasitas',
+        'is_active',
     ];
 
     public function events()

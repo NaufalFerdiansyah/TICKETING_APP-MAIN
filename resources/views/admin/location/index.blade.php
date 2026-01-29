@@ -94,7 +94,18 @@
                             <td class="text-gray-600">{{ number_format($location->kapasitas) }} orang</td>
                             <td>
                                 <div class="flex justify-center space-x-2">
-                                    <button
+                                    <a href="{{ route('admin.locations.show', $location) }}"
+                                        class="btn btn-sm bg-green-500 hover:bg-green-600 text-white border-0 shadow-sm hover:shadow-md transition-all duration-300">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                            </path>
+                                        </svg>
+                                        Detail
+                                    </a>
+                                    <button type="button"
                                         class="btn btn-sm bg-blue-500 hover:bg-blue-600 text-white border-0 shadow-sm hover:shadow-md transition-all duration-300"
                                         onclick="openEditModal(this)" data-id="{{ $location->id }}"
                                         data-nama="{{ $location->nama }}"
@@ -108,9 +119,8 @@
                                         </svg>
                                         Edit
                                     </button>
-                                    <button
-                                        class="btn btn-sm bg-red-500 hover:bg-red-600 text-white border-0 shadow-sm hover:shadow-md transition-all duration-300"
-                                        onclick="openDeleteModal(this)" data-id="{{ $location->id }}">
+                                    <button type="button" class="btn btn-sm bg-red-500 hover:bg-red-600 text-white border-0 shadow-sm hover:shadow-md transition-all duration-300"
+                                        onclick="deleteLocation({{ $location->id }})">
                                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
@@ -290,45 +300,6 @@
         </form>
     </dialog>
 
-    <!-- Delete Modal -->
-    <dialog id="delete_modal" class="modal">
-        <div class="modal-box max-w-md rounded-2xl">
-            <form method="POST">
-                @csrf
-                @method('DELETE')
-
-                <input type="hidden" name="location_id" id="delete_location_id">
-
-                <!-- Modal Header -->
-                <div class="flex items-center space-x-3 mb-6">
-                    <div
-                        class="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
-                            </path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800">Hapus Lokasi</h3>
-                </div>
-
-                <p class="text-gray-600 mb-6">Apakah Anda yakin ingin menghapus lokasi ini? Tindakan ini tidak dapat
-                    dibatalkan.</p>
-
-                <div class="modal-action">
-                    <button
-                        class="btn bg-gradient-to-r from-red-500 to-red-600 text-white border-0 hover:from-red-600 hover:to-red-700"
-                        type="submit">
-                        Ya, Hapus
-                    </button>
-                    <button class="btn btn-ghost" onclick="delete_modal.close()" type="button">Batal</button>
-                </div>
-            </form>
-        </div>
-        <form method="dialog" class="modal-backdrop">
-            <button>close</button>
-        </form>
-    </dialog>
 
     <script>
     function openEditModal(button) {
@@ -351,15 +322,32 @@
         edit_modal.showModal();
     }
 
-    function openDeleteModal(button) {
-        const id = button.dataset.id;
-        const form = document.querySelector('#delete_modal form');
-        document.getElementById("delete_location_id").value = id;
+    function deleteLocation(id) {
+        if (!confirm('Apakah Anda yakin ingin menghapus lokasi ini?')) {
+            return;
+        }
 
-        // Set action dengan parameter ID
-        form.action = `/admin/locations/${id}`
+        // Create a form and submit it
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/admin/locations/${id}`;
+        
+        // Add CSRF token
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
+                         document.querySelector('input[name="_token"]')?.value;
+        
+        if (!csrfToken) {
+            console.error('CSRF token not found');
+            return;
+        }
 
-        delete_modal.showModal();
+        form.innerHTML = `
+            <input type="hidden" name="_token" value="${csrfToken}">
+            <input type="hidden" name="_method" value="DELETE">
+        `;
+
+        document.body.appendChild(form);
+        form.submit();
     }
     </script>
 

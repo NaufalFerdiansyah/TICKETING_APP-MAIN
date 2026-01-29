@@ -16,6 +16,22 @@ use App\Http\Controllers\User\OrderController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Debug route
+Route::get('/test-locations-all', function() {
+    return [
+        'all' => \App\Models\Location::all()->map(fn($l) => [
+            'id' => $l->id,
+            'nama' => $l->nama,
+            'is_active' => $l->is_active,
+            'is_active_type' => gettype($l->is_active),
+            'is_active_value' => var_export($l->is_active, true)
+        ]),
+        'active_y' => \App\Models\Location::where('is_active', 'Y')->get()->map(fn($l) => ['id' => $l->id, 'nama' => $l->nama]),
+        'active_true' => \App\Models\Location::where('is_active', true)->get()->map(fn($l) => ['id' => $l->id, 'nama' => $l->nama]),
+        'active_1' => \App\Models\Location::where('is_active', 1)->get()->map(fn($l) => ['id' => $l->id, 'nama' => $l->nama]),
+    ];
+});
+
 // Events
 Route::get('/events/{event}', [UserEventController::class, 'show'])->name('events.show');
 
@@ -44,8 +60,14 @@ Route::middleware('auth')->group(function () {
         
         // Payment Type Management
         Route::resource('payment-types', PaymentTypeController::class);
+        Route::get('/payment-types/trashed', [PaymentTypeController::class, 'trashed'])->name('payment-types.trashed');
+        Route::patch('/payment-types/{id}/restore', [PaymentTypeController::class, 'restore'])->name('payment-types.restore');
+        Route::delete('/payment-types/{id}/force-delete', [PaymentTypeController::class, 'forceDelete'])->name('payment-types.forceDelete');
         
         // Location Management
+        Route::get('/locations/trashed', [LocationController::class, 'trashed'])->name('locations.trashed');
+        Route::patch('/locations/{id}/restore', [LocationController::class, 'restore'])->name('locations.restore');
+        Route::delete('/locations/{id}/force-delete', [LocationController::class, 'forceDelete'])->name('locations.forceDelete');
         Route::resource('locations', LocationController::class);
         
         // Ticket Type Management

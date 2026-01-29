@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Event;
 use App\Models\Kategori;
+use App\Models\Location;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,9 @@ class EventController extends Controller
     public function create()
     {
         $categories = Kategori::all();
-        return view('admin.event.create', compact('categories'));
+        $locations = Location::where('is_active', 'Y')->get();
+        \Log::info('Locations in create:', ['count' => $locations->count(), 'locations' => $locations->toArray()]);
+        return view('admin.event.create', compact('categories', 'locations'));
     }
 
     /**
@@ -35,7 +38,7 @@ class EventController extends Controller
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'tanggal_waktu' => 'required|date',
-            'lokasi' => 'required|string|max:255',
+            'location_id' => 'required|exists:locations,id',
             'kategori_id' => 'required|exists:kategoris,id',
             'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -73,7 +76,8 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($id);
         $categories = Kategori::all();
-        return view('admin.event.edit', compact('event', 'categories'));
+        $locations = Location::where('is_active', 'Y')->get();
+        return view('admin.event.edit', compact('event', 'categories', 'locations'));
     }
 
     /**
@@ -88,7 +92,7 @@ class EventController extends Controller
                 'judul' => 'required|string|max:255',
                 'deskripsi' => 'required|string',
                 'tanggal_waktu' => 'required|date',
-                'lokasi' => 'required|string|max:255',
+                'location_id' => 'required|exists:locations,id',
                 'kategori_id' => 'required|exists:kategoris,id',
                 'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);

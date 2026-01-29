@@ -13,7 +13,7 @@ class PaymentTypeController extends Controller
      */
     public function index()
     {
-        $paymentTypes = PaymentType::all();
+        $paymentTypes = PaymentType::withoutTrashed()->get();
         return view('admin.payment-type.index', compact('paymentTypes'));
     }
 
@@ -66,11 +66,41 @@ class PaymentTypeController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storage (soft delete).
      */
     public function destroy(string $id)
     {
-        PaymentType::destroy($id);
+        $paymentType = PaymentType::findOrFail($id);
+        $paymentType->delete();
         return redirect()->route('admin.payment-types.index')->with('success', 'Tipe pembayaran berhasil dihapus.');
+    }
+
+    /**
+     * Display deleted payment types.
+     */
+    public function trashed()
+    {
+        $paymentTypes = PaymentType::onlyTrashed()->get();
+        return view('admin.payment-type.trashed', compact('paymentTypes'));
+    }
+
+    /**
+     * Restore a soft-deleted payment type.
+     */
+    public function restore(string $id)
+    {
+        $paymentType = PaymentType::withTrashed()->findOrFail($id);
+        $paymentType->restore();
+        return redirect()->route('admin.payment-types.index')->with('success', 'Tipe pembayaran berhasil dipulihkan.');
+    }
+
+    /**
+     * Permanently delete a payment type.
+     */
+    public function forceDelete(string $id)
+    {
+        $paymentType = PaymentType::withTrashed()->findOrFail($id);
+        $paymentType->forceDelete();
+        return redirect()->route('admin.payment-types.trashed')->with('success', 'Tipe pembayaran berhasil dihapus permanen.');
     }
 }

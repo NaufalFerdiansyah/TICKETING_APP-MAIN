@@ -13,8 +13,35 @@ class LocationController extends Controller
      */
     public function index()
     {
-        $locations = Location::all();
+        $locations = Location::where('is_active', 'Y')->get();
         return view('admin.location.index', compact('locations'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        // Not used - we use modal dialog instead
+        return redirect()->route('admin.locations.index');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        // Not used - we use modal dialog instead
+        return redirect()->route('admin.locations.index');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $location = Location::findOrFail($id);
+        return view('admin.location.show', compact('location'));
     }
 
     /**
@@ -29,6 +56,7 @@ class LocationController extends Controller
             'kapasitas' => 'required|integer|min:1',
         ]);
 
+        $payload['is_active'] = 'Y';
         Location::create($payload);
 
         return redirect()->route('admin.locations.index')->with('success', 'Lokasi berhasil ditambahkan.');
@@ -53,11 +81,41 @@ class LocationController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storage (soft delete).
      */
     public function destroy(string $id)
     {
-        Location::destroy($id);
+        $location = Location::findOrFail($id);
+        $location->update(['is_active' => 'N']);
         return redirect()->route('admin.locations.index')->with('success', 'Lokasi berhasil dihapus.');
+    }
+
+    /**
+     * Display deleted locations.
+     */
+    public function trashed()
+    {
+        $locations = Location::where('is_active', 'N')->get();
+        return view('admin.location.trashed', compact('locations'));
+    }
+
+    /**
+     * Restore a soft-deleted location.
+     */
+    public function restore(string $id)
+    {
+        $location = Location::findOrFail($id);
+        $location->update(['is_active' => 'Y']);
+        return redirect()->route('admin.locations.index')->with('success', 'Lokasi berhasil dipulihkan.');
+    }
+
+    /**
+     * Permanently delete a location.
+     */
+    public function forceDelete(string $id)
+    {
+        $location = Location::findOrFail($id);
+        $location->delete();
+        return redirect()->route('admin.locations.trashed')->with('success', 'Lokasi berhasil dihapus permanen.');
     }
 }

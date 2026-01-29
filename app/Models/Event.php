@@ -14,7 +14,7 @@ class Event extends Model
         'judul',
         'deskripsi',
         'tanggal_waktu',
-        'lokasi',
+        'location_id',
         'kategori_id',
         'gambar',
     ];
@@ -22,6 +22,11 @@ class Event extends Model
     protected $casts = [
         'tanggal_waktu' => 'datetime',
     ];
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
 
     public function tikets()
     {
